@@ -38,7 +38,7 @@ while True:
     name_of_the_rooms[chat_room].append(client)
 
     print(f'{name} logged in the chat room {chat_room} | INFO {addr}')
-    broadcast(chat_room, f'{name}: enter the chat room!')
+    broadcast(chat_room, f'{name}: enter the chat room!\n')
     
     thread = threading.Thread(target=send_message, args=(name, chat_room, client))
     thread.start()
