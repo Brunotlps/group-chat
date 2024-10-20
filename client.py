@@ -31,17 +31,30 @@ class Chat:
         self.root = Tk()
         self.root.geometry('800x800')
         self.root.title('Chat')
+
+        font_style = ('Helvetica', 14)
+        background_color = '#f0f0f0'
+        text_color = '#333333'
+        button_color = '#4CAF50'
+
+        self.root.configure(bg=background_color)
         
-        self.text_box = Text(self.root)
-        self.text_box.place(relx=0.05, rely=0.01, width=700, height=600)
+        # Define uma coluna para expandir com o redimensionamento da janela
+        self.root.grid_columnconfigure(0, weight=1)
+        
+        self.text_box = Text(self.root, state='disabled', bg='#fff', fg=text_color, font=font_style, bd=2, relief='sunken') # Inicialmente desativada para evitar edição direta
+        self.text_box.grid(row=0, column=0, padx=10, pady=10, sticky='nsew') # Ocupa a maior parte da janela
 
-        self.text_field = Entry(self.root)
-        self.text_field.place(relx=0.05, rely=0.8, width=500, height=20)
+        self.text_field = Entry(self.root, bg='#fff', fg=text_color, font=font_style, bd=2, relief='sunken')
+        self.text_field.grid(row=1, column=0, padx=10, pady=10, sticky='ew')
 
-        self.send_button = Button(self.root, text='Send', command=self.send_message)
-        self.send_button.place(relx=0.7, rely=0.8, width=100, height=20)
+        self.send_button = Button(self.root, text='Send', command=self.send_message, bg=button_color, fg='#fff', font=font_style, bd=2, relief='raised')
+        self.send_button.grid(row=1, column=1, padx=10, pady=10, sticky='ew')
+
         self.root.protocol("WM_DELETE_WINDOW", self.close)
 
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(1, weight=0)
         self.root.mainloop()
     
     def connect(self):
