@@ -14,12 +14,16 @@ server.listen()
 name_of_the_rooms = {}
 
 def broadcast(chat_room, message):
-    for i in name_of_the_rooms[chat_room]:
-        if isinstance(message, str):
-            message = message.encode()
-        i.send(message)
 
-def send_message(name, chat_room, client):
+    if isinstance(message, str):
+        message = message.encode()
+    for client_socket in name_of_the_rooms[chat_room]:
+        try:
+            client_socket.send(message)
+        except Exception as e:
+            print(f"Error : {e}")
+
+def first_message(name, chat_room, client):
     while True:
         message = client.recv(1024)
         message = f'{name}: {message.decode()}\n'
@@ -29,8 +33,8 @@ while True:
     
     client, addr = server.accept()
     client.send(b'SALA')
-    chat_room = client.recv(1024).decode()
     name = client.recv(1024).decode()
+    chat_room = client.recv(1024).decode()
     
     if chat_room not in name_of_the_rooms.keys():
         name_of_the_rooms[chat_room] = []
@@ -40,5 +44,5 @@ while True:
     print(f'{name} logged in the chat room {chat_room} | INFO {addr}')
     broadcast(chat_room, f'{name}: enter the chat room!\n')
     
-    thread = threading.Thread(target=send_message, args=(name, chat_room, client))
+    thread = threading.Thread(target=first_message, args=(name, chat_room, client))
     thread.start()
